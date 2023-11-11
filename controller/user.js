@@ -1,22 +1,60 @@
 const Division = require('../model/Division');
 const User = require('../model/User');
 
-const getAllUser = (req, res, next)=>{
+const getAllUser = async (req, res, next) => {
   try {
-    //TUGAS NOMOR 1
-  } catch (error) {
-    console.log(error.message);
-  }
-}
+    // TUGAS NOMOR 1
+    const users = await User.findAll();
 
-const getUserById = (req,res,next)=>{
+    if (!users || users.length === 0) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "No user data found"
+      });
+    }
+
+    res.status(200).json({
+      status: "Success",
+      message: "Successfully fetch all user data",
+      users: users.map(user => ({
+        id: user.id,
+        fullName: user.fullName,
+        angkatan: user.angkatan,
+        divisionId: user.divisionId
+      }))
+    });
+  } catch (error) {
+    console.log("Terjadi error berupa", error.message);
+  }
+};
+
+const getUserById = async (req, res, next) => {
   try {
     //TUGAS NOMOR 2 cari user berdasarkan userId
-    const {userId} = req.params
+    const { userId } = req.params;
+    const user = await User.findByPk(userId);
+
+    if (!user|| users.length === 0) {
+      return res.status(404).json({
+        status: 'Error',
+        message: 'User not found',
+      });
+    }
+
+      res.status(200).json({
+      status: 'Success',
+      message: 'Successfully fetch user data',
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        angkatan: user.angkatan,
+        divisionId: user.divisionId,
+      },
+    });
   } catch (error) {
-    console.log(error.message);
+    console.log("Terjadi error berupa", error.message);;
   }
-}
+};
 
 const postUser = async(req,res,next)=>{
   try {
@@ -63,7 +101,8 @@ const postUser = async(req,res,next)=>{
     })
 
   } catch (error) {
-    console.log(error);
+    console.log("Terjadi error berupa", error.message);
+
   }
 }
 
@@ -92,7 +131,8 @@ const deleteUser = (req,res,next)=>{
       message: "Successfully delete user"
     })
   } catch (error) {
-    console.log(error.message);
+    console.log("Terjadi error berupa", error.message);
+
   }
 }
 
